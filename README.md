@@ -21,7 +21,7 @@ Texteditaa is designed to provide a reliable text editor that works both online 
 
 ## Installation
 
-This application is deployed to [Heroku](https://justanotherte.herokuapp.com/).
+This application can be  deployed to [Heroku].
 
 To run Texteditaa locally:
 
