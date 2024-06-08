@@ -1,46 +1,53 @@
 import { openDB } from "idb";
 
-const initdb = async () =>
-  openDB("jate", 1, {
+// Function to initialize the database
+const initdb = async () => {
+  // Open the "jate" database with version 1
+  // If the database doesn't exist, it will be created
+  const jateDB = await openDB("jate", 1, {
     upgrade(db) {
+      // Check if the "jate" object store already exists
       if (db.objectStoreNames.contains("jate")) {
         console.log("jate database already exists");
         return;
       }
+      // Create the "jate" object store with auto-incrementing key
       db.createObjectStore("jate", { keyPath: "id", autoIncrement: true });
       console.log("jate database created");
     },
   });
+};
 
 // TODO: Add logic to a method that accepts some content and adds it to the database
 export const putDb = async (content) => {
-  // Database and version
+  // Open the "jate" database with version 1
   const jateDB = await openDB("jate", 1);
-  // New transaction specifying db and privileges
+  // Start a new transaction with read-write access
   const tx = jateDB.transaction("jate", "readwrite");
-  // Open desired object store
+  // Open the "jate" object store
   const store = tx.objectStore("jate");
-  // Pass in content
+  // Put the content into the object store with a predefined ID of 1
   const request = store.put({ id: 1, value: content });
-  // Confirmation
+  // Wait for the request to complete and get the result
   const result = await request;
   console.log("🚀 - data saved to the database", result);
 };
 
 // TODO: Add logic for a method that gets all the content from the database
 export const getDb = async () => {
-  // Database and version
+  // Open the "jate" database with version 1
   const jateDB = await openDB("jate", 1);
-  // New transaction specifying db and privileges
+  // Start a new transaction with read-only access
   const tx = jateDB.transaction("jate", "readonly");
-  // Open desired object store
+  // Open the "jate" object store
   const store = tx.objectStore("jate");
-  // Get all request
+  // Get all the data from the object store
   const request = store.getAll();
-  // Confirmation and return
+  // Wait for the request to complete and get the result
   const result = await request;
   console.log("🚀 - data read from database", result);
   return result.value;
 };
 
+// Initialize the database
 initdb();
